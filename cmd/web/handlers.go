@@ -17,29 +17,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, snippet := range snippets {
-		fmt.Fprintf(w, "%+v\n", snippet)
-	}
+	app.render(w, r, http.StatusOK, "home.tmpl.html", templateData{
+		Snippets: snippets,
+	})
 
-	//files := []string{
-	//	"./ui/html/base.tmpl.html",
-	//	"./ui/html/partials/nav.tmpl.html",
-	//	"./ui/html/pages/home.tmpl.html",
-	//}
-	//
-	//ts, err := template.ParseFiles(files...)
-	//
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//	return
-	//}
-	//
-	//err = ts.ExecuteTemplate(w, "base", nil)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//}
-
-	w.Write([]byte("Hello from Snippetbox"))
 }
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
@@ -57,11 +38,12 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	_, err = fmt.Fprintf(w, "%+v", snippet)
-	if err != nil {
-		return
-	}
+
+	app.render(w, r, http.StatusOK, "view.tmpl.html", templateData{
+		Snippet: snippet,
+	})
 }
+
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Display a form for creating a new snippet..."))
 }
